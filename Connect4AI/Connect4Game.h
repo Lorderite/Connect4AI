@@ -9,7 +9,7 @@ public:
 private:
 	int moves;
 	int lastMove;
-	int **board;
+	int board[HEIGHT][WIDTH];
 
 public:
 	Connect4Game();
@@ -22,7 +22,7 @@ public:
 
 	void ResetGame();
 
-	void Drop(int column, int value);
+	int Drop(int column, int value);
 
 	void PrintBoard() const;
 
@@ -34,7 +34,7 @@ public:
 
 	//Game states
 
-	int** CopyBoardState(int** const boardIn);
+	//int** CopyBoardState(int** const boardIn);
 	
 	//Other Gets
 

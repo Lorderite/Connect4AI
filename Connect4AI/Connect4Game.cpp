@@ -12,12 +12,14 @@ Connect4Game::Connect4Game()
 {
 	moves = 0;
 
-	//Allocate memory for board
-	board = new int* [HEIGHT];
-	for (size_t i = 0; i < HEIGHT; i++)
-	{
-		board[i] = new int[WIDTH];
-	}
+	////Allocate memory for board
+	//board = new int* [HEIGHT];
+	//for (size_t i = 0; i < HEIGHT; i++)
+	//{
+	//	board[i] = new int[WIDTH];
+	//}
+
+	//board = new int[HEIGHT][WIDTH]();
 
 	//set all values to zero
 	ResetBoard();
@@ -25,19 +27,19 @@ Connect4Game::Connect4Game()
 
 Connect4Game::Connect4Game(const Connect4Game &gameIn)
 {
-	//memcpy(this->board, gameIn.board, sizeof(gameIn.board));
-	this->board = CopyBoardState(gameIn.board);
+	memcpy(this->board, gameIn.board, sizeof(gameIn.board));
+	//this->board = CopyBoardState(gameIn.board);
 	this->moves = gameIn.moves;
 	this->lastMove = gameIn.lastMove;
 }
 
 Connect4Game::~Connect4Game() 
 {
-	for (size_t i = 0; i < HEIGHT; i++)
+	/*for (size_t i = 0; i < HEIGHT; i++)
 	{
 		delete[] board[i];
-	}
-	delete[] board;
+	}*/
+	//delete[] board;
 }
 
 void Connect4Game::ResetBoard()
@@ -57,9 +59,9 @@ void Connect4Game::ResetGame() {
 	lastMove = 0;
 }
 
-void Connect4Game::Drop(int column, int value)
+int Connect4Game::Drop(int column, int value)
 {
-	int lowest = -1;
+	int lowest = 0;
 
 	//Check lowest token
 	for (int i = 0; i < HEIGHT; i++)
@@ -76,6 +78,8 @@ void Connect4Game::Drop(int column, int value)
 	board[lowest][column] = value;
 	lastMove = column;
 	moves++;
+
+	return lowest;
 }
 
 void Connect4Game::PrintBoard() const
@@ -123,7 +127,7 @@ const int Connect4Game::CheckWin() const
 
 			if (board[i][j] != 0) { //Check for player
 			
-				//Verticle check
+				//Verticle down check
 				if (i < HEIGHT - 3
 					&& board[i][j] == board[i+1][j]
 					&& board[i][j] == board[i+2][j]
@@ -131,7 +135,7 @@ const int Connect4Game::CheckWin() const
 					return(board[i][j]);
 				}
 
-				//Horizontal check
+				//Horizontal right check
 				if (j < WIDTH - 3
 					&& board[i][j] == board[i][j + 1]
 					&& board[i][j] == board[i][j + 2]
@@ -155,96 +159,81 @@ const int Connect4Game::CheckWin() const
 			}
 		}
 	}
-
-
-	////Check horizontal
-	////for each row
-	//for (size_t i = 0; i < HEIGHT; i++)
-	//{
-	//	//for each column -3
-	//	for (size_t j = 0; j < WIDTH-3; j++)
-	//	{
-	//		if (board[i][j] != 0
-	//			&& board[i][j] == board[i][j + 1]
-	//			&& board[i][j] == board[i][j + 2]
-	//			&& board[i][j] == board[i][j + 3]) {
-	//			return(board[i][j]);
-	//		}
-	//	}
-	//}
-
-	////Check Verticle
-	//for (size_t i = 0; i < HEIGHT - 3; i++)
-	//{
-	//	//for each column -3
-	//	for (size_t j = 0; j < WIDTH; j++)
-	//	{
-	//		if (board[i][j] != 0
-	//			&& board[i][j] == board[i+1][j]
-	//			&& board[i][j] == board[i+2][j]
-	//			&& board[i][j] == board[i+3][j]) {
-	//			return(board[i][j]);
-	//		}
-	//	}
-	//}
-
-	////Check Diagonal North East
-	//for (size_t i = 0; i < HEIGHT - 3; i++)
-	//{
-	//	//for each column -3
-	//	for (size_t j = 0; j < WIDTH - 3; j++)
-	//	{
-	//		if (board[i][j] != 0
-	//			&& board[i][j] == board[i + 1][j + 1]
-	//			&& board[i][j] == board[i + 2][j + 2]
-	//			&& board[i][j] == board[i + 3][j + 3]) {
-	//			return(board[i][j]);
-	//		}
-	//	}
-	//}
-
-	////Check Diagonal South East
-	//for (size_t i = 3; i < HEIGHT; i++)
-	//{
-	//	//for each column -3
-	//	for (size_t j = 0; j < WIDTH-3; j++)
-	//	{
-	//		if (board[i][j] != 0
-	//			&& board[i][j] == board[i - 1][j + 1]
-	//			&& board[i][j] == board[i - 2][j + 2]
-	//			&& board[i][j] == board[i - 3][j + 3]) {
-	//			return(board[i][j]);
-	//		}
-	//	}
-	//}
-
 	return 0;
 }
 
+//const bool Connect4Game::IsWinningMove(int column, int player)const {
+//	//Clone board
+//	Connect4Game testGame(*this);
+//	
+//	//Test drop
+//	testGame.Drop(column, player);
+//
+//	return(testGame.CheckWin() == player);
+//}
+#pragma optimize( "", off )
 const bool Connect4Game::IsWinningMove(int column, int player)const {
+	
 	//Clone board
 	Connect4Game testGame(*this);
-	
-	//Test drop
-	testGame.Drop(column, player);
 
-	return(testGame.CheckWin() == player);
-}
+	//Drop and retrieve how deep the token fell
+	int i = testGame.Drop(column, player);
+	int j = column;
 
-int** Connect4Game::CopyBoardState(int** const boardIn) {
-	int** boardOut;
+	auto board = testGame.board;
 
-	//Allocate memory for board
-	boardOut = new int* [HEIGHT];
-	for (size_t i = 0; i < HEIGHT; i++)
-	{
-		boardOut[i] = new int[WIDTH];
-
-		//Copy
-		for (size_t j = 0; j < WIDTH; j++)
-		{
-			boardOut[i][j] = boardIn[i][j];
-		}
+	//Evaluate if this move wins
+	//Verticle down check
+	if (i > 2
+		&& board[i][j] == board[i - 1][j]
+		&& board[i][j] == board[i - 2][j]
+		&& board[i][j] == board[i - 3][j]) {
+		return true;
 	}
-	return boardOut;
+	//Horizontal left check
+	if (j > 3
+		&& board[i][j] == board[i][j - 1]
+		&& board[i][j] == board[i][j - 2]
+		&& board[i][j] == board[i][j - 3]) {
+		return true;
+	}
+	//Horizontal right check
+	if (j < WIDTH - 3
+		&& board[i][j] == board[i][j + 1]
+		&& board[i][j] == board[i][j + 2]
+		&& board[i][j] == board[i][j + 3]) {
+		return true;
+	}
+	//Diagonal Up-Left check
+	if (i < HEIGHT - 3 && j > 3
+		&& board[i][j] == board[i + 1][j - 1]
+		&& board[i][j] == board[i + 2][j - 2]
+		&& board[i][j] == board[i + 3][j - 3]) {
+		return true;
+	}
+	//Diagonal Up-Right check
+	if (i < HEIGHT - 3 && j < WIDTH - 3
+		&& board[i][j] == board[i + 1][j + 1]
+		&& board[i][j] == board[i + 2][j + 2]
+		&& board[i][j] == board[i + 3][j + 3]) {
+		return true;
+	}
+	//Diagonal Down-Right check
+	if (i >= 3 && j < WIDTH - 3
+		&& board[i][j] == board[i - 1][j + 1]
+		&& board[i][j] == board[i - 2][j + 2]
+		&& board[i][j] == board[i - 3][j + 3]) {
+		return true;
+	}
+	//Diagonal Down-left check
+	if (i >= 3 && j > 3
+		&& board[i][j] == board[i - 1][j - 1]
+		&& board[i][j] == board[i - 2][j - 2]
+		&& board[i][j] == board[i - 3][j - 3]) {
+		return true;
+	}
+
+	return false;
 }
+#pragma optimize( "", off )

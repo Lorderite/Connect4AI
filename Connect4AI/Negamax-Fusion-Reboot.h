@@ -12,7 +12,7 @@ using namespace std;
 class NegaMaxSolver {
 
 public:
-	NegaMaxSolver(int searchDepth=15) {
+	NegaMaxSolver(int searchDepth=11) {
 		this->searchDepth = searchDepth;
 		nodesExplored = 0;
 	}
@@ -90,7 +90,7 @@ public:
 		cout << "Moves considered: ";
 		for (int var : bestMoves)
 		{
-			cout << var+1 << ", ";
+			cout << var << ", ";
 		}
 		cout << "\n";
 
@@ -124,18 +124,18 @@ public:
 		//Count this node
 		nodesExplored++;
 
-		//If draw or beyond max depth
+		//If draw or beyoynd max depth
 		if (game.GetMoves() == (Connect4Game::WIDTH * Connect4Game::HEIGHT) || depth > searchDepth) {return 0;}
 
 		//Check for winning move
 		for (int i = 0; i < Connect4Game::WIDTH; i++){
 			if (game.IsDroppable(i) && game.IsWinningMove(i, player)) {
-				return(Connect4Game::WIDTH * Connect4Game::HEIGHT + 1 - game.GetMoves());// / 2; //Favours less moves
+				return(Connect4Game::WIDTH * Connect4Game::HEIGHT + 1 - game.GetMoves()) / 2; //Favours less moves
 			}
 		}
 
 		//handle max
-		int max = (Connect4Game::WIDTH * Connect4Game::HEIGHT - 1 - game.GetMoves());// / 2;
+		int max = (Connect4Game::WIDTH * Connect4Game::HEIGHT - 1 - game.GetMoves()) / 2;
 		if (beta > max) {
 			beta = max; //Cap beta to max
 			if (alpha >= beta) { 
