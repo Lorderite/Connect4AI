@@ -12,7 +12,7 @@ using namespace std;
 class NegaMaxSolver {
 
 public:
-	NegaMaxSolver(int searchDepth=15) {
+	NegaMaxSolver(int searchDepth=17) {
 		this->searchDepth = searchDepth;
 		nodesExplored = 0;
 	}

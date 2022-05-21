@@ -171,15 +171,16 @@ const int Connect4Game::CheckWin() const
 //
 //	return(testGame.CheckWin() == player);
 //}
-#pragma optimize( "", off )
+
+//#pragma optimize( "", off )
 const bool Connect4Game::IsWinningMove(int column, int player)const {
 	
 	//Clone board
 	Connect4Game testGame(*this);
 
 	//Drop and retrieve how deep the token fell
-	int i = testGame.Drop(column, player);
-	int j = column;
+	int i = testGame.Drop(column, player);//Height (up/down)
+	int j = column;//Column (Left/right)
 
 	auto board = testGame.board;
 
@@ -205,35 +206,28 @@ const bool Connect4Game::IsWinningMove(int column, int player)const {
 		&& board[i][j] == board[i][j + 3]) {
 		return true;
 	}
-	//Diagonal Up-Left check
-	if (i < HEIGHT - 3 && j > 3
-		&& board[i][j] == board[i + 1][j - 1]
-		&& board[i][j] == board[i + 2][j - 2]
-		&& board[i][j] == board[i + 3][j - 3]) {
-		return true;
+	//Diagonal Left check
+	for (int off = 0; i < 3; i++) {
+		if (board[i - off][j - off] == player) {
+			if (i - off < HEIGHT - 3 && j - off > 3
+				&& board[i - off][j - off] == board[i + 1 - off][j - 1 - off]
+				&& board[i - off][j - off] == board[i + 2 - off][j - 2 - off]
+				&& board[i - off][j - off] == board[i + 3 - off][j - 3 - off]) {
+				return true;
+			}
+		}
 	}
-	//Diagonal Up-Right check
-	if (i < HEIGHT - 3 && j < WIDTH - 3
-		&& board[i][j] == board[i + 1][j + 1]
-		&& board[i][j] == board[i + 2][j + 2]
-		&& board[i][j] == board[i + 3][j + 3]) {
-		return true;
+	//Diagonal Right check
+	for (int off = 0; i < 3; i++) {
+		if (board[i - off][j - off] == player) {
+			if (i - off < HEIGHT - 3 && j - off < WIDTH - 3
+				&& board[i - off][j - off] == board[i + 1 - off][j + 1 - off]
+				&& board[i - off][j - off] == board[i + 2 - off][j + 2 - off]
+				&& board[i - off][j - off] == board[i + 3 - off][j + 3 - off]) {
+				return true;
+			}
+		}
 	}
-	//Diagonal Down-Right check
-	if (i >= 3 && j < WIDTH - 3
-		&& board[i][j] == board[i - 1][j + 1]
-		&& board[i][j] == board[i - 2][j + 2]
-		&& board[i][j] == board[i - 3][j + 3]) {
-		return true;
-	}
-	//Diagonal Down-left check
-	if (i >= 3 && j > 3
-		&& board[i][j] == board[i - 1][j - 1]
-		&& board[i][j] == board[i - 2][j - 2]
-		&& board[i][j] == board[i - 3][j - 3]) {
-		return true;
-	}
-
 	return false;
 }
-#pragma optimize( "", off )
+//#pragma optimize( "", off )

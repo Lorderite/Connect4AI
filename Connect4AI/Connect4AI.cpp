@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
 		nms = NegaMaxSolver();
 	}
 
-
+	cout << "Current Version: 1.0\n";
 	cout << "Ai difficulty: " << nms.GetSearchDepth() << " Moves ahead\n\n";
 
 	//gameplay loop
