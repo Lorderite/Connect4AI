@@ -52,7 +52,8 @@ void PlayerNegamax(NegaMaxSolver &nms, Connect4Game& game, int player) {
 	game.Drop(nms.SolveMove(game, player), player);
 	auto stop = high_resolution_clock::now();
 	auto duration = duration_cast<milliseconds>(stop - start);
-	cout << "Nodes explored: " <<  nms.nodesExplored<<"\nTime taken: "<<duration.count()<<"ms\n\n";
+	cout.imbue(locale(""));
+	cout << "Nodes explored: " << nms.nodesExplored <<"\nTime taken: "<<duration.count()<<"ms\n\n";
 }
 
 int main(int argc, char* argv[])
@@ -70,7 +71,7 @@ int main(int argc, char* argv[])
 		nms = NegaMaxSolver();
 	}
 
-	cout << "Current Version: 1.0\n";
+	cout << "Current Version: 1.1\n";
 	cout << "Ai difficulty: " << nms.GetSearchDepth() << " Moves ahead\n\n";
 
 	//gameplay loop

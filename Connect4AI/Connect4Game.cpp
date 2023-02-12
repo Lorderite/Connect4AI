@@ -179,51 +179,62 @@ const bool Connect4Game::IsWinningMove(int column, int player)const {
 	Connect4Game testGame(*this);
 
 	//Drop and retrieve how deep the token fell
-	int i = testGame.Drop(column, player);//Height (up/down)
-	int j = column;//Column (Left/right)
+	int hi = testGame.Drop(column, player);//Height (up/down)
+	int col = column;//Column (Left/right)
 
 	auto board = testGame.board;
 
 	//Evaluate if this move wins
 	//Verticle down check
-	if (i > 2
-		&& board[i][j] == board[i - 1][j]
-		&& board[i][j] == board[i - 2][j]
-		&& board[i][j] == board[i - 3][j]) {
+	if (hi > 2
+		&& board[hi][col] == board[hi - 1][col]
+		&& board[hi][col] == board[hi - 2][col]
+		&& board[hi][col] == board[hi - 3][col]) {
 		return true;
 	}
-	//Horizontal left check
-	if (j > 3
-		&& board[i][j] == board[i][j - 1]
-		&& board[i][j] == board[i][j - 2]
-		&& board[i][j] == board[i][j - 3]) {
-		return true;
-	}
-	//Horizontal right check
-	if (j < WIDTH - 3
-		&& board[i][j] == board[i][j + 1]
-		&& board[i][j] == board[i][j + 2]
-		&& board[i][j] == board[i][j + 3]) {
-		return true;
+	////Horizontal left check
+	//if (col > 3
+	//	&& board[hi][col] == board[hi][col - 1]
+	//	&& board[hi][col] == board[hi][col - 2]
+	//	&& board[hi][col] == board[hi][col - 3]) {
+	//	return true;
+	//}
+	////Horizontal right check
+	//if (col < WIDTH - 3
+	//	&& board[hi][col] == board[hi][col + 1]
+	//	&& board[hi][col] == board[hi][col + 2]
+	//	&& board[hi][col] == board[hi][col + 3]) {
+	//	return true;
+	//}
+	//Horizontal Checks
+	for (int off = 0; off < 4; off++) {
+		if (board[hi][col - off] == player) {
+			if (col - off >= 0 && col - off < WIDTH - 3
+				&& board[hi][col - off] == board[hi][col + 1 - off]
+				&& board[hi][col - off] == board[hi][col + 2 - off]
+				&& board[hi][col - off] == board[hi][col + 3 - off]) {
+				return true;
+			}
+		}
 	}
 	//Diagonal Left check
-	for (int off = 0; i < 3; i++) {
-		if (board[i - off][j - off] == player) {
-			if (i - off < HEIGHT - 3 && j - off > 3
-				&& board[i - off][j - off] == board[i + 1 - off][j - 1 - off]
-				&& board[i - off][j - off] == board[i + 2 - off][j - 2 - off]
-				&& board[i - off][j - off] == board[i + 3 - off][j - 3 - off]) {
+	for (int off = 0; off < 4; off++) {
+		if (board[hi - off][col + off] == player) {
+			if (hi - off < HEIGHT - 3 && hi - off >= 0 && col + off > 2 && col + off < WIDTH
+				&& board[hi - off][col + off] == board[hi + 1 - off][col - 1 + off]
+				&& board[hi - off][col + off] == board[hi + 2 - off][col - 2 + off]
+				&& board[hi - off][col + off] == board[hi + 3 - off][col - 3 + off]) {
 				return true;
 			}
 		}
 	}
 	//Diagonal Right check
-	for (int off = 0; i < 3; i++) {
-		if (board[i - off][j - off] == player) {
-			if (i - off < HEIGHT - 3 && j - off < WIDTH - 3
-				&& board[i - off][j - off] == board[i + 1 - off][j + 1 - off]
-				&& board[i - off][j - off] == board[i + 2 - off][j + 2 - off]
-				&& board[i - off][j - off] == board[i + 3 - off][j + 3 - off]) {
+	for (int off = 0; off < 4; off++) {
+		if (board[hi - off][col - off] == player) {
+			if (hi - off < HEIGHT - 3 && hi - off >= 0 && col - off >= 0 && col - off < WIDTH - 3 
+				&& board[hi - off][col - off] == board[hi + 1 - off][col + 1 - off]
+				&& board[hi - off][col - off] == board[hi + 2 - off][col + 2 - off]
+				&& board[hi - off][col - off] == board[hi + 3 - off][col + 3 - off]) {
 				return true;
 			}
 		}

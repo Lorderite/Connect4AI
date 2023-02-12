@@ -33,6 +33,7 @@ public:
 		future<int> threads[Connect4Game::WIDTH];
 
 		int bestScore = INVALID_MOVE;
+		nodesExplored = 0;
 		int scores[7]{};
 
 		cout << "Thinking...\n";
@@ -112,7 +113,6 @@ public:
 
 		//If no immediate win then explore potential deeper
 		//Set up variables
-		nodesExplored = 0;
 		int depth = 0;
 
 		//Run algorithm
@@ -130,12 +130,12 @@ public:
 		//Check for winning move
 		for (int i = 0; i < Connect4Game::WIDTH; i++){
 			if (game.IsDroppable(i) && game.IsWinningMove(i, player)) {
-				return(Connect4Game::WIDTH * Connect4Game::HEIGHT + 1 - game.GetMoves());// / 2; //Favours less moves
+				return(Connect4Game::WIDTH * Connect4Game::HEIGHT + 1 - game.GetMoves()) / 2; //Favours less moves
 			}
 		}
 
 		//handle max
-		int max = (Connect4Game::WIDTH * Connect4Game::HEIGHT - 1 - game.GetMoves());// / 2;
+		int max = (Connect4Game::WIDTH * Connect4Game::HEIGHT - 1 - game.GetMoves())/ 2;
 		if (beta > max) {
 			beta = max; //Cap beta to max
 			if (alpha >= beta) { 
