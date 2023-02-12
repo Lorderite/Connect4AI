@@ -10,36 +10,18 @@ using std::to_string;
 
 Connect4Game::Connect4Game()
 {
-	moves = 0;
-
-	////Allocate memory for board
-	//board = new int* [HEIGHT];
-	//for (size_t i = 0; i < HEIGHT; i++)
-	//{
-	//	board[i] = new int[WIDTH];
-	//}
-
-	//board = new int[HEIGHT][WIDTH]();
-
-	//set all values to zero
-	ResetBoard();
+	ResetGame();
 }
 
 Connect4Game::Connect4Game(const Connect4Game &gameIn)
 {
 	memcpy(this->board, gameIn.board, sizeof(gameIn.board));
-	//this->board = CopyBoardState(gameIn.board);
 	this->moves = gameIn.moves;
 	this->lastMove = gameIn.lastMove;
 }
 
 Connect4Game::~Connect4Game() 
 {
-	/*for (size_t i = 0; i < HEIGHT; i++)
-	{
-		delete[] board[i];
-	}*/
-	//delete[] board;
 }
 
 void Connect4Game::ResetBoard()
@@ -162,17 +144,6 @@ const int Connect4Game::CheckWin() const
 	return 0;
 }
 
-//const bool Connect4Game::IsWinningMove(int column, int player)const {
-//	//Clone board
-//	Connect4Game testGame(*this);
-//	
-//	//Test drop
-//	testGame.Drop(column, player);
-//
-//	return(testGame.CheckWin() == player);
-//}
-
-//#pragma optimize( "", off )
 const bool Connect4Game::IsWinningMove(int column, int player)const {
 	
 	//Clone board
@@ -192,20 +163,6 @@ const bool Connect4Game::IsWinningMove(int column, int player)const {
 		&& board[hi][col] == board[hi - 3][col]) {
 		return true;
 	}
-	////Horizontal left check
-	//if (col > 3
-	//	&& board[hi][col] == board[hi][col - 1]
-	//	&& board[hi][col] == board[hi][col - 2]
-	//	&& board[hi][col] == board[hi][col - 3]) {
-	//	return true;
-	//}
-	////Horizontal right check
-	//if (col < WIDTH - 3
-	//	&& board[hi][col] == board[hi][col + 1]
-	//	&& board[hi][col] == board[hi][col + 2]
-	//	&& board[hi][col] == board[hi][col + 3]) {
-	//	return true;
-	//}
 	//Horizontal Checks
 	for (int off = 0; off < 4; off++) {
 		if (board[hi][col - off] == player) {
@@ -241,4 +198,3 @@ const bool Connect4Game::IsWinningMove(int column, int player)const {
 	}
 	return false;
 }
-//#pragma optimize( "", off )
